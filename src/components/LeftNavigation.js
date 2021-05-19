@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import * as Material from "@material-ui/core";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import { withRouter } from "react-router-dom";
 import {
   Payment,
   Dashboard,
@@ -15,39 +16,58 @@ const useStyles = makeStyles({
   root: {
     color: "gray",
     fontSize: "2em",
+    width: "200px",
+  },
+  container: {
+    display: "flex",
   },
 });
 
-const pages = ["Overview", "Users", "Billing Info", "Sign Off"];
-
 const LeftNavigation = (props) => {
   const classes = useStyles();
+  console.log("props: ", props);
+  const { history } = props;
+
+  const pages = [
+    {
+      text: "Overview",
+      icon: <Dashboard />,
+      onClick: () => history.push("/"),
+    },
+    {
+      text: "Users",
+      icon: <Group />,
+      onClick: () => history.push("/Users"),
+    },
+    {
+      text: "Billing Info",
+      icon: <Payment />,
+      onClick: () => history.push("/Billing"),
+    },
+    {
+      text: "Sign off",
+      icon: <EmojiPeople />,
+      onClick: () => history.push("/Signoff"),
+    },
+  ];
 
   return (
-    <div>
-      <Material.Divider></Material.Divider>
-      <Drawer anchor="left" className={classes.root} variant="permanent">
+    <div className={classes.container}>
+      <Drawer anchor="left" variant="permanent" className={classes.root}>
         <Material.List>
-          {pages.map((pageName, index) => (
-            <Material.ListItem button key={pageName}>
-              <ListItemIcon>
-                {(() => {
-                  switch (pageName) {
-                    case "Overview": return <Dashboard/>;
-                    case "Users": return <Group/>;
-                    case "Billing Info": return <Payment/>;
-                    case "Sign Off": return <EmojiPeople/>;
-                    default: return;
-                  }
-                })()}    
-              </ListItemIcon>
-              <Material.ListItemText primary={pageName} />
-            </Material.ListItem>
-              ))}
+          {pages.map((page, index) => {
+            const { text, icon, onClick } = page;
+            return (
+              <Material.ListItem button key={text} onClick={onClick}>
+                {icon && <Material.ListItemIcon>{icon}</Material.ListItemIcon>}
+                <Material.ListItemText primary={text} />
+              </Material.ListItem>
+            );
+          })}
         </Material.List>
       </Drawer>
     </div>
   );
 };
 
-export default LeftNavigation;
+export default withRouter(LeftNavigation);
