@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import Overview from "./components/Overview";
 import Users from "./components/Users";
 import Billing from "./components/Billing";
